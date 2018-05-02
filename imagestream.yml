@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ImageStream
+metadata:
+  name: php-ldap
+spec:
+  tags:
+    - name: '1.0'
+      annotations:
+        version: '1.0'
+      from:
+        kind: DockerImage
+        name: 'registry.access.redhat.com/rhscl/php-70-rhel7:latest'
