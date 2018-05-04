@@ -12,16 +12,16 @@ Two methods are presented in this example.
 
 
 Files in this repository:
-- Dockerfile - Used to copy the modified script into a container
-- buildconfig.yml - Used to define a build for a modified container
-- imagestream.yml - Used to define a imagestream for a modified container
+- Dockerfile - Used to add ldap config changes to an intermmediate container
+- buildconfig.yml - Used to define a build for a intermmediate container
+- imagestream.yml - Used to define a imagestream for a intermmediate container
 - template.yml - Used to create an example pod
-- index.php - Example page
+- index.php - Example page (the application)
 
 
-Steps for producing the modified container:
+## Incoporating the modifications
 
-For using a Dockerfile to create an intermmediate image:
+### For using a Dockerfile to create an intermmediate image:
 
 1.  Save the [buildconfig](https://github.com/travisrogers05/php-ldap/blob/master/buildconfig.yml) and [imagestream](https://github.com/travisrogers05/php-ldap/blob/master/imagestream.yml) and make any changes to the files that you wish.
 2.  Create the buildconfig and imagestream in your Openshift project.
@@ -37,7 +37,7 @@ oc start-build php-ldap
 
 
 
-For using an S2I based build to incoporate changes into a resulting image to use:
+### For using an S2I based build to incoporate changes into a resulting image to use:
 
 1.  Save the [template](https://github.com/travisrogers05/php-ldap/blob/master/template.yml) into your project.
 ~~~
