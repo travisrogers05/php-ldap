@@ -109,7 +109,7 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - ${NAME}
+        - php-ldap
         from:
           kind: ImageStreamTag
           name: ${NAME}:latest
