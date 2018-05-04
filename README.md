@@ -6,16 +6,22 @@ This example will append the following options to /etc/openldap/ldap.conf in the
 TLS_REQCERT     allow
 ~~~
 
-The resulting container is derived from image [registry.access.redhat.com/rhscl/php-70-rhel7](https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/php-70-rhel7).
+Two methods are presented in this example.  
+- One method uses a Dockerfile based build to create an intermmediate image that extends the [PHP 7.0.x image](https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/php-70-rhel7) provided by Red Hat.
+- The other method uses an S2I based build to incoporate the ldap changes directly into the target container.
 
 
 Files in this repository:
 - Dockerfile - Used to copy the modified script into a container
 - buildconfig.yml - Used to define a build for a modified container
 - imagestream.yml - Used to define a imagestream for a modified container
+- template.yml - Used to create an example pod
+- index.php - Example page
 
 
 Steps for producing the modified container:
+
+For using a Dockerfile to create an intermmediate image:
 
 1.  Save the [buildconfig](https://github.com/travisrogers05/php-ldap/blob/master/buildconfig.yml) and [imagestream](https://github.com/travisrogers05/php-ldap/blob/master/imagestream.yml) and make any changes to the files that you wish.
 2.  Create the buildconfig and imagestream in your Openshift project.
@@ -27,50 +33,28 @@ oc create -f imagestream.yml
 ~~~
 oc start-build php-ldap
 ~~~
-4.  Now use the resulting output container, imagestream or imagestreamtag as the input for your PHP application.  The example name is php-ldap.  Modify this to your liking.
+4.  Now use the resulting output container, imagestream or imagestreamtag as the base image for your PHP application.  The example name is php-ldap.  Modify this to your liking.
+
+
+
+For using an S2I based build to incoporate changes into a resulting image to use:
+
+1.  Save the [template](https://github.com/travisrogers05/php-ldap/blob/master/template.yml) into your project.
+~~~
+oc create -f https://raw.githubusercontent.com/travisrogers05/php-ldap/master/template.yml
+~~~  
+
 
 
 ## Testing the new container
 
-The following commands use a modified version of the [php cake example template](https://github.com/travisrogers05/php-ldap/blob/master/cakephp-mysql-example-ldap.yml) to incorporate this modified PHP 7.0 container in an example application.  The template has been modified to use the [new container imagestream](https://github.com/travisrogers05/php-ldap/blob/master/cakephp-mysql-example-ldap.yml#L97).
+**NOTE:** If you're using the Dockerfile method to create an intermmediate image, you will want to modify the template.yml to incorporate the intermmediate image by changing the [FROM imagestream tag](https://github.com/travisrogers05/php-ldap/blob/master/template.yml#L61) to an appropriate value.  The default would be [php-ldap:1.0](https://github.com/travisrogers05/php-ldap/blob/master/buildconfig.yml#L24).
 
 ~~~
-$ oc create -f https://raw.githubusercontent.com/travisrogers05/php-ldap/master/cakephp-mysql-example-ldap.yml
-$ oc process cakephp-mysql-example-ldap | oc create -f -
-secret "cakephp-mysql-example" created
-service "cakephp-mysql-example" created
-route "cakephp-mysql-example" created
-imagestream "cakephp-mysql-example" created
-buildconfig "cakephp-mysql-example" created
-deploymentconfig "cakephp-mysql-example" created
-service "mysql" created
-deploymentconfig "mysql" created
+$ oc process php-ldap | oc create -f -
 
 $ oc get pods
-NAME                            READY     STATUS      RESTARTS   AGE
-cakephp-mysql-example-1-5mh5r   1/1       Running     0          6m
-cakephp-mysql-example-1-build   0/1       Completed   0          9m
-mysql-1-n265p                   1/1       Running     0          8m
-php-ldap-1-build                0/1       Completed   0          23m
 
 $ oc exec cakephp-mysql-example-1-5mh5r -- cat /etc/openldap/ldap.conf
-#
-# LDAP Defaults
-#
 
-# See ldap.conf(5) for details
-# This file should be world readable but not world writable.
-
-#BASE	dc=example,dc=com
-#URI	ldap://ldap.example.com ldap://ldap-master.example.com:666
-
-#SIZELIMIT	12
-#TIMELIMIT	15
-#DEREF		never
-
-TLS_CACERTDIR	/etc/openldap/certs
-
-# Turning this off breaks GSSAPI used with krb5 when rdns = false
-SASL_NOCANON	on
-TLS_REQCERT     allow
 ~~~
