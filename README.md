@@ -8,7 +8,7 @@ TLS_REQCERT     allow
 
 Two methods are presented in this example.  
 - One method uses a Dockerfile based build to create an intermmediate image that extends the [PHP 7.0.x image](https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/php-70-rhel7) provided by Red Hat.
-- The other method uses an S2I based build to incoporate the ldap changes directly into the target container.
+- The other method uses an S2I based build to incoporate the ldap changes directly into the target container by supplying a [modified version of the assemble script](https://github.com/travisrogers05/php-ldap/blob/master/.s2i/bin/assemble#L11-#L12) in the source repository.
 
 
 Files in this repository:
