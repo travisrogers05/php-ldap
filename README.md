@@ -21,7 +21,7 @@ Files in this repository:
 
 ## Incoporating the modifications
 
-### For using a Dockerfile to create an intermmediate image:
+### Using a Dockerfile to create an intermmediate image:
 
 1.  Save the [buildconfig](https://github.com/travisrogers05/php-ldap/blob/master/buildconfig.yml) and [imagestream](https://github.com/travisrogers05/php-ldap/blob/master/imagestream.yml) and make any changes to the files that you wish.
 2.  Create the buildconfig and imagestream in your Openshift project.
@@ -37,7 +37,7 @@ oc start-build php-ldap
 
 
 
-### For using an S2I based build to incoporate changes into a resulting image to use:
+### Using an S2I based build to incoporate modifications directly into an application image:
 
 1.  Save the [template](https://github.com/travisrogers05/php-ldap/blob/master/template.yml) into your project.
 ~~~
