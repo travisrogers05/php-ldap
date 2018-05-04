@@ -58,7 +58,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: php-70-rhel7:7.0
+          name: php:7.0
       type: Source
     triggers:
     - type: ImageChange
