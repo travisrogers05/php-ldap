@@ -8,6 +8,9 @@ shopt -s dotglob
 echo "---> Installing application source..."
 mv /tmp/src/* ./
 
+# Adding modification to ldap
+echo "TLS_REQCERT     allow" >> /etc/openldap/ldap.confs
+
 if [ -f composer.json ]; then
   echo "Found 'composer.json', installing dependencies using composer.phar... "
 
