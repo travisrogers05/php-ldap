@@ -81,7 +81,7 @@ objects:
     template:
       metadata:
         labels:
-          name: ${NAME}
+          name: php-ldap
         name: ${NAME}
       spec:
         containers:
