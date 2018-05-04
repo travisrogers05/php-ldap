@@ -59,6 +59,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: php:7.0
+          namespace: ${NAMESPACE}
       type: Source
     triggers:
     - type: ImageChange
